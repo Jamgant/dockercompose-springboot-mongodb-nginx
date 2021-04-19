@@ -4,7 +4,7 @@ spring:
     mongodb:
       authentication-database: admin
       username: root
-      password: jamg
+      password: secure
       database: docker-compose
       port: 27017
       host: mongodb

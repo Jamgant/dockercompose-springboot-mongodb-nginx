@@ -3,7 +3,7 @@ db = conn.getDB("docker-compose")
 db.createUser(
 {
     user: "root",
-    pwd: "jamg",
+    pwd: "secure",
     roles: [
         {
             role: "readWrite",
