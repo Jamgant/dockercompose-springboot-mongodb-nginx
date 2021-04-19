@@ -1,0 +1,10 @@
+#Docker MongoDB config
+spring:
+  data:
+    mongodb:
+      authentication-database: admin
+      username: root
+      password: jamg
+      database: docker-compose
+      port: 27017
+      host: mongodb

@@ -13,16 +13,25 @@ services:
    - app
 
   mongodb:
+    #restart: always
     container_name: some-mongo
-    image: mongo:3.6
+    image: mongo:4.4
     environment:
       - MONGO_DATA_DIR=/data/db
       - MONGO_LOG_DIR=/dev/null
+      - MONGO_INITDB_DATABASE=docker-compose
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=jamg
     volumes:
       - ./data/db:/data/db
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
     ports:
         - 27017:27017
-    command: mongod --smallfiles --logpath=/dev/null # --quiet
+    #command: mongod --logpath=/dev/null # --quiet
+    healthcheck:
+      test: "echo 'db.runCommand(\"ping\").ok'"
+      interval: 30s
+      timeout: 5s
 
   app:
     restart: always
@@ -36,3 +45,4 @@ services:
     command: mvn clean spring-boot:run
     depends_on:
       - mongodb
+
