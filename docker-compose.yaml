@@ -21,7 +21,7 @@ services:
       - MONGO_LOG_DIR=/dev/null
       - MONGO_INITDB_DATABASE=docker-compose
       - MONGO_INITDB_ROOT_USERNAME=root
-      - MONGO_INITDB_ROOT_PASSWORD=jamg
+      - MONGO_INITDB_ROOT_PASSWORD=secure
     volumes:
       - ./data/db:/data/db
       - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
@@ -46,3 +46,32 @@ services:
     depends_on:
       - mongodb
 
+  prometheus:
+    image: prom/prometheus:v2.1.0
+    volumes:
+      - ./prometheus/:/etc/prometheus/
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    ports:
+      - 9090:9090
+    #links:
+    #  - cadvisor:cadvisor
+    #  - alertmanager:alertmanager
+    #      - pushgateway:pushgateway
+    #depends_on:
+    #  - cadvisor
+    #      - pushgateway
+    #networks:
+     # - back-tier
+    restart: always
+#    deploy:
+#      placement:
+#        constraints:
+#          - node.hostname == ${HOSTNAME}
+
+volumes:
+  prometheus_data:
