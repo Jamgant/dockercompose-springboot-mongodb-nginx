@@ -12,6 +12,16 @@ services:
    depends_on:
    - app
 
+  nginx-prometheus-exporter:
+    container_name: nginx-exporter
+    image: nginx/nginx-prometheus-exporter
+    ports:
+      - 9113:9113
+    command:
+      - '-nginx.scrape-uri=http://nginx:80/basic_status'
+
+
+
   mongodb:
     #restart: always
     container_name: some-mongo
