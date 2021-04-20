@@ -1,8 +1,9 @@
 version: '3'
 services:
   nginx:
-   container_name: some-nginx
+   container_name: nginx
    image: nginx:1.13
+   #image: tsouhaieb/nginx-sts
    restart: always
    ports:
    - 80:80
@@ -15,6 +16,8 @@ services:
   nginx-prometheus-exporter:
     container_name: nginx-exporter
     image: nginx/nginx-prometheus-exporter
+    depends_on:
+      - nginx
     ports:
       - 9113:9113
     command:
@@ -40,10 +43,11 @@ services:
     #command: mongod --logpath=/dev/null # --quiet
     healthcheck:
       test: "echo 'db.runCommand(\"ping\").ok'"
-      interval: 30s
+      interval: 60s
       timeout: 5s
 
   app:
+    container_name: my-app
     restart: always
     build: ./app
     working_dir: /app
@@ -57,6 +61,7 @@ services:
       - mongodb
 
   prometheus:
+    container_name: prometheus
     image: prom/prometheus:v2.1.0
     volumes:
       - ./prometheus/:/etc/prometheus/
@@ -83,5 +88,23 @@ services:
 #        constraints:
 #          - node.hostname == ${HOSTNAME}
 
+  grafana:
+    image: grafana/grafana
+    container_name: monitoring_grafana
+    #user: "472"
+    depends_on:
+      - prometheus
+    ports:
+      - 3000:3000
+    volumes:
+      - ./data/grafana:/var/lib/grafana
+     # - ./grafana/provisioning/:/etc/grafana/provisioning/
+    env_file:
+      - ./grafana/config.monitoring
+    restart: always
+
+
+
 volumes:
   prometheus_data:
+  grafana_data:

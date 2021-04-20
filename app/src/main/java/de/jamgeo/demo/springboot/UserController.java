@@ -4,8 +4,8 @@ package de.jamgeo.demo.springboot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 @RestController()
@@ -26,9 +26,9 @@ public class UserController {
     }
 
     @RequestMapping(value = "/user/{userId}", method = RequestMethod.GET)
-    public @ResponseBody User getUser(@PathVariable String userId) {
+    public @ResponseBody Optional<User> getUser(@PathVariable String userId) {
         logger.info("Getting user with ID: " + userId);
-        return userRepository.findByUserId(userId);
+        return userRepository.findById(userId);
     }
 
 
