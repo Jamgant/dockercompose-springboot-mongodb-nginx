@@ -11,6 +11,7 @@ services:
    volumes:
    - ./nginx/:/etc/nginx/
    - ./data/nginx/log:/var/log/nginx/
+   - ./certs:/etc/ssl/certs/
    depends_on:
    - app
 
